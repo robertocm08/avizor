@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Instrument+Sans:wght@400..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="styles.css?v=9">
   <!-- Si cambias el número de versión aquí, cámbialo también en sw.js -->
 </head>
 <body>
@@ -38,7 +38,7 @@
       </a>
       <span class="sello">
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-        Privado: nada sale de tu dispositivo
+        Privado: tus mensajes no salen del móvil
       </span>
     </header>
 
@@ -195,12 +195,15 @@
       </div>
       <p class="pie-nota">Avizor analiza el mensaje en tu propio navegador con reglas y un modelo entrenado.
         Es una ayuda orientativa y no sustituye a tu sentido común.</p>
+      <p class="pie-nota"><strong>Privacidad:</strong> tus mensajes e imágenes nunca salen de tu dispositivo.
+        Solo contamos de forma anónima las visitas y el color del resultado (rojo, ámbar o verde),
+        sin cookies y sin guardar nada que te identifique.</p>
     </footer>
   </div>
 
   <!-- Orden importante: modelo entrenado -> motor de análisis -> interfaz -->
-  <script src="modelo.js?v=8"></script>
-  <script src="motor.js?v=8"></script>
-  <script src="app.js?v=8"></script>
+  <script src="modelo.js?v=9"></script>
+  <script src="motor.js?v=9"></script>
+  <script src="app.js?v=9"></script>
 </body>
 </html>

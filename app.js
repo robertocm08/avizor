@@ -16,6 +16,40 @@ const EJEMPLOS = {
 
 const $ = id => document.getElementById(id);
 
+// =====================================================================
+// ESTADÍSTICAS ANÓNIMAS (GoatCounter, sin cookies)
+// =====================================================================
+// Solo enviamos rutas cortas y fijas, por ejemplo "resultado/estafa" u
+// "origen/foto". NUNCA el texto del mensaje, la imagen ni la dirección
+// completa (que puede llevar el mensaje compartido en "?texto=...").
+// En localhost GoatCounter no cuenta nada, así que tus pruebas no ensucian.
+const GOATCOUNTER = "https://avizor.goatcounter.com/count";
+const pendientes = [];
+
+function contar(ruta, titulo = ruta) {
+  const gc = window.goatcounter;
+  if (gc && typeof gc.count === "function") {
+    try { gc.count({ path: ruta, title: titulo, event: true }); } catch { /* sin estadísticas no pasa nada */ }
+  } else if (pendientes.length < 20) {
+    pendientes.push([ruta, titulo]);
+  }
+}
+
+(function cargarContador() {
+  if (location.protocol === "file:") return;
+  // no_onload: no dejamos que cuente la visita solo, porque usaría la dirección completa
+  window.goatcounter = { no_onload: true };
+  const s = document.createElement("script");
+  s.async = true;
+  s.src = "https://gc.zgo.at/count.v4.js";
+  s.dataset.goatcounter = GOATCOUNTER;
+  s.onload = () => {
+    try { window.goatcounter.count({ path: location.pathname, title: "Visita" }); } catch { /* nada */ }
+    pendientes.splice(0).forEach(([r, t]) => contar(r, t));
+  };
+  document.head.append(s);   // si falla (sin internet, bloqueador...), la app sigue igual
+})();
+
 function crearElemento(etiqueta, clase, texto) {
   const el = document.createElement(etiqueta);
   if (clase) el.className = clase;
@@ -114,27 +148,39 @@ function nuevoMensaje() {
   $("mensaje").focus({ preventScroll: true });
 }
 
-function analizar() {
+/**
+ * origen: cómo llegó el mensaje ("escrito", "pegar", "foto", "archivo",
+ * "compartido" o "ejemplo"). Solo se usa para las estadísticas anónimas.
+ */
+function analizar(origen = "escrito") {
   const texto = $("mensaje").value.trim();
   if (!texto) {
     $("mensaje").focus();
     return;
   }
-  mostrarResultado(analizarMensaje(texto), texto);
+  const resultado = analizarMensaje(texto);
+  mostrarResultado(resultado, texto);
+  // Los ejemplos se cuentan aparte para no mezclarlos con mensajes reales
+  if (typeof origen === "string" && origen.startsWith("ejemplo")) {
+    contar(origen, "Ejemplo probado");
+  } else {
+    contar(`resultado/${resultado.nivel}`, `Resultado: ${VEREDICTOS[resultado.nivel].titulo}`);
+    contar(`origen/${origen}`, `Mensaje ${origen}`);
+  }
 }
 
-$("analizar").addEventListener("click", analizar);
+$("analizar").addEventListener("click", () => analizar("escrito"));
 $("limpiar").addEventListener("click", nuevoMensaje);
 $("otro").addEventListener("click", nuevoMensaje);
 // Ctrl + Enter también analiza
 $("mensaje").addEventListener("keydown", e => {
-  if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) analizar();
+  if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) analizar("escrito");
 });
 // Botones de ejemplo: leen su atributo data-ejemplo
 document.querySelectorAll("[data-ejemplo]").forEach(boton => {
   boton.addEventListener("click", () => {
     $("mensaje").value = EJEMPLOS[boton.dataset.ejemplo];
-    analizar();
+    analizar(`ejemplo/${boton.dataset.ejemplo}`);
   });
 });
 
@@ -233,7 +279,7 @@ async function procesarTexto(archivo) {
   }
   $("mensaje").value = texto.slice(0, 5000);
   $("estado-ocr").hidden = true;
-  analizar();
+  analizar("archivo");
 }
 
 /** Punto de entrada común para el botón, arrastrar y pegar. */
@@ -274,7 +320,7 @@ async function procesarImagen(archivo) {
     }
     $("mensaje").value = texto;
     estadoOCR("Listo: hemos copiado el texto de la imagen en el cuadro. Revísalo por si hay algún error.", 1);
-    analizar();
+    analizar("foto");
   } catch (err) {
     estadoOCR(err.message || "No se pudo leer la imagen.", null, true);
   } finally {
@@ -332,7 +378,7 @@ document.addEventListener("paste", e => {
   $("mensaje").value = partes.join("\n");
   // Limpiamos la dirección para que al recargar no se vuelva a analizar
   history.replaceState(null, "", location.pathname);
-  analizar();
+  analizar("compartido");
 })();
 
 // 9.2 Botón "Pegar y comprobar": lee lo que se ha copiado (p. ej. un SMS en
@@ -350,7 +396,7 @@ if (navigator.clipboard && navigator.clipboard.readText) {
       }
       $("estado-ocr").hidden = true;
       $("mensaje").value = texto;
-      analizar();
+      analizar("pegar");
     } catch {
       // Si el navegador no deja leer el portapapeles, guiamos para pegar a mano
       estadoOCR("Mantén pulsado el cuadro de texto y toca «Pegar». Después pulsa «Comprobar mensaje».", null, true);

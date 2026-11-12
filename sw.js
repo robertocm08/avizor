@@ -8,15 +8,15 @@
  *
  * Al publicar cambios, sube el número de VERSION para forzar la actualización.
  */
-const VERSION = "avizor-v8";
+const VERSION = "avizor-v9";
 
 const ARCHIVOS = [
   "./",
   "./index.html",
-  "./styles.css?v=8",
-  "./modelo.js?v=8",
-  "./motor.js?v=8",
-  "./app.js?v=8",
+  "./styles.css?v=9",
+  "./modelo.js?v=9",
+  "./motor.js?v=9",
+  "./app.js?v=9",
   "./manifest.webmanifest",
   "./icono-192.png",
   "./icono-512.png",
