@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Avizor · Detector de timos</title>
+  <meta name="description" content="Pega un SMS o sube una captura y descubre si tiene las señales de las estafas más comunes.">
+  <meta name="theme-color" content="#f4efe4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15130f" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231d1a15'/%3E%3Cpath d='M6 16c2.8-4.6 6.2-7 10-7s7.2 2.4 10 7c-2.8 4.6-6.2 7-10 7s-7.2-2.4-10-7z' fill='none' stroke='%23f4efe4' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='3.4' fill='%23c0392b'/%3E%3C/svg%3E">
+  <!-- App instalable (PWA): icono en la pantalla de inicio y pantalla completa -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Avizor">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Instrument+Sans:wght@400..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="styles.css?v=8">
+  <!-- Si cambias el número de versión aquí, cámbialo también en sw.js -->
+</head>
+<body>
+  <a class="saltar" href="#mensaje">Saltar al cuadro de texto</a>
+
+  <div class="pagina">
+
+    <!-- Barra superior con el logotipo -->
+    <header class="barra">
+      <a class="marca" href="./" aria-label="Avizor, inicio">
+        <svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
+          <rect width="32" height="32" rx="9" class="logo-fondo"/>
+          <path d="M6 16c2.8-4.6 6.2-7 10-7s7.2 2.4 10 7c-2.8 4.6-6.2 7-10 7s-7.2-2.4-10-7z" class="logo-ojo"/>
+          <circle cx="16" cy="16" r="3.4" class="logo-pupila"/>
+        </svg>
+        <span>Avizor</span>
+      </a>
+      <span class="sello">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        Privado: nada sale de tu dispositivo
+      </span>
+    </header>
+
+    <main>
+      <!-- Presentación -->
+      <section class="intro" aria-labelledby="titular">
+        <p class="antetitulo">Detector de timos en SMS y WhatsApp</p>
+        <h1 id="titular">¿Te ha llegado un mensaje <em>raro</em>?</h1>
+        <p class="entradilla">Pégalo, o sube una foto o captura de pantalla. En un segundo te decimos si tiene
+          las señales de las estafas más comunes en España, y qué hacer.</p>
+      </section>
+
+      <!-- Compositor: texto + captura (toda la caja acepta arrastrar una imagen) -->
+      <section id="zona-imagen" class="compositor" aria-label="Mensaje a comprobar">
+        <label for="mensaje" class="solo-lectores">Mensaje que quieres comprobar</label>
+        <textarea id="mensaje" rows="6" placeholder="Copia el SMS o WhatsApp sospechoso y pégalo aquí"></textarea>
+
+        <div id="estado-ocr" class="estado-ocr" hidden role="status" aria-live="polite">
+          <img id="vista-previa" alt="Miniatura de la imagen subida">
+          <div class="estado-texto">
+            <p id="mensaje-ocr"></p>
+            <div class="progreso"><div id="barra-ocr"></div></div>
+          </div>
+        </div>
+
+        <div class="compositor-pie">
+          <!-- Un solo toque: pega lo copiado y lo comprueba (ideal en iPhone).
+               Se muestra solo si el navegador permite leer el portapapeles. -->
+          <button type="button" id="pegar" class="btn-pegar" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="4" width="10" height="4" rx="1.5"/><path d="M9 6H6.5A1.5 1.5 0 0 0 5 7.5v12A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 17.5 6H15"/></svg>
+            Pegar y comprobar
+          </button>
+          <button type="button" id="adjuntar" class="btn-adjuntar">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M4 18l5-5 4 4 3-3 4 4"/></svg>
+            <span class="texto-largo">Subir foto o captura</span><span class="texto-corto">Subir foto</span>
+          </button>
+          <span class="pista">o arrástrala aquí · <kbd>Ctrl</kbd> + <kbd>V</kbd></span>
+          <div class="acciones">
+            <button type="button" id="limpiar" class="btn-texto">Vaciar</button>
+            <button type="button" id="analizar" class="btn-principal">Comprobar mensaje</button>
+          </div>
+        </div>
+
+        <!-- En iPhone ofrece: Fototeca, Hacer foto o Seleccionar archivo (app Archivos) -->
+        <input type="file" id="archivo" accept="image/*,.txt,text/plain" hidden>
+        <div class="capa-soltar" aria-hidden="true">Suelta la imagen o el archivo para leerlo</div>
+      </section>
+
+      <nav class="ejemplos" aria-label="Mensajes de ejemplo">
+        <span class="ejemplos-titulo">¿Quieres verlo en acción? Prueba un ejemplo:</span>
+        <button type="button" data-ejemplo="correos">Paquete de Correos</button>
+        <button type="button" data-ejemplo="dgt">Multa de la DGT</button>
+        <button type="button" data-ejemplo="hacienda">Devolución de Hacienda</button>
+        <button type="button" data-ejemplo="banco">Aviso del banco</button>
+        <button type="button" data-ejemplo="mama">«Hola mamá»</button>
+        <button type="button" data-ejemplo="normal">Mensaje normal</button>
+      </nav>
+
+      <!-- Resultado (oculto hasta analizar) -->
+      <section id="resultado" class="resultado" hidden aria-live="polite" aria-labelledby="titulo-veredicto">
+        <div class="veredicto">
+          <div class="semaforo" aria-hidden="true">
+            <span class="luz roja"></span>
+            <span class="luz ambar"></span>
+            <span class="luz verde"></span>
+          </div>
+          <div class="veredicto-texto">
+            <p class="antetitulo">Nuestro veredicto</p>
+            <h2 id="titulo-veredicto" tabindex="-1"></h2>
+            <p id="resumen" class="resumen"></p>
+          </div>
+        </div>
+
+        <div class="escala">
+          <div class="escala-pista" aria-hidden="true">
+            <span class="tramo">Seguro</span>
+            <span class="tramo">Dudoso</span>
+            <span class="tramo">Estafa</span>
+          </div>
+          <div id="medidor" class="escala-carril" role="meter" aria-label="Nivel de riesgo"
+               aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <span id="marcador" class="marcador"></span>
+          </div>
+          <p id="puntuacion" class="puntuacion"></p>
+        </div>
+
+        <!-- Lo primero: qué hacer -->
+        <div class="consejos-bloque">
+          <h3>Qué hacer ahora</h3>
+          <ul id="consejos" class="consejos"></ul>
+          <a id="llamar-017" class="btn-017" href="tel:017">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
+            Llamar gratis al 017 (INCIBE)
+          </a>
+        </div>
+
+        <div class="rejilla">
+          <div class="bloque">
+            <h3>Por qué lo decimos</h3>
+            <ol id="motivos" class="motivos"></ol>
+            <details id="mas-senales" class="mas-senales">
+              <summary id="mas-senales-texto"></summary>
+              <ol id="motivos-resto" class="motivos motivos-resto"></ol>
+            </details>
+          </div>
+          <div class="bloque">
+            <h3>Tu mensaje, con las señales marcadas</h3>
+            <blockquote id="mensaje-marcado" class="mensaje-marcado"></blockquote>
+            <p class="leyenda">
+              <mark class="m-grave">señal grave</mark>
+              <mark class="m-aviso">señal de aviso</mark>
+              <mark class="m-positivo">web oficial</mark>
+            </p>
+          </div>
+        </div>
+
+        <div class="cierre">
+          <button type="button" id="otro" class="btn-secundario">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/></svg>
+            Comprobar otro mensaje
+          </button>
+          <p class="aviso-orientativo">Avizor es orientativo: si dudas, contacta con la entidad por sus canales oficiales.</p>
+        </div>
+      </section>
+
+      <!-- Qué miramos -->
+      <section class="como" aria-labelledby="como-titulo">
+        <h2 id="como-titulo" class="como-titulo">Cómo reconocer un timo</h2>
+        <div class="pasos">
+          <article>
+            <span class="num" aria-hidden="true">01</span>
+            <h3>Lo que te pide</h3>
+            <p>Prisa, amenazas de bloqueo, pagos pendientes, claves o códigos. Ningún banco ni organismo serio te los pide por mensaje.</p>
+          </article>
+          <article>
+            <span class="num" aria-hidden="true">02</span>
+            <h3>Quién dice ser</h3>
+            <p>Correos, la DGT, Hacienda, tu banco… o tu hijo con un «número nuevo». Son las suplantaciones más repetidas.</p>
+          </article>
+          <article>
+            <span class="num" aria-hidden="true">03</span>
+            <h3>Adónde te lleva</h3>
+            <p>Enlaces acortados, webs que imitan marcas o terminaciones raras. Ante la duda, escribe tú la web oficial.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="pie">
+      <div class="pie-ayuda">
+        <p><strong>¿Ya has pulsado el enlace o has pagado?</strong> Llama a tu banco cuanto antes y
+          pide ayuda gratuita en el <a href="tel:017">017</a>, la línea de ciberseguridad de INCIBE.
+          También puedes denunciarlo en la Policía Nacional o la Guardia Civil.</p>
+      </div>
+      <p class="pie-nota">Avizor analiza el mensaje en tu propio navegador con reglas y un modelo entrenado.
+        Es una ayuda orientativa y no sustituye a tu sentido común.</p>
+    </footer>
+  </div>
+
+  <!-- Orden importante: modelo entrenado -> motor de análisis -> interfaz -->
+  <script src="modelo.js?v=8"></script>
+  <script src="motor.js?v=8"></script>
+  <script src="app.js?v=8"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "Avizor · Detector de timos",
+  "short_name": "Avizor",
+  "description": "Comprueba si un SMS o WhatsApp es una estafa. Funciona en tu móvil, sin enviar nada.",
+  "lang": "es-ES",
+  "dir": "ltr",
+  "start_url": "./?origen=app",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4efe4",
+  "theme_color": "#1d1a15",
+  "categories": ["utilities", "security"],
+  "icons": [
+    { "src": "icono-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icono-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "share_target": {
+    "action": "./",
+    "method": "GET",
+    "params": { "title": "titulo", "text": "texto", "url": "enlace" }
+  }
+}
