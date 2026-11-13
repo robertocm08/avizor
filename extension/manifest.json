@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Avizor · Detector de webs falsas",
+  "short_name": "Avizor",
+  "version": "1.0.0",
+  "description": "Te avisa si entras en una web que imita a Correos, tu banco, la DGT o Hacienda, y revisa enlaces sospechosos. Todo en tu navegador.",
+  "minimum_chrome_version": "110",
+  "permissions": ["webNavigation", "contextMenus", "storage"],
+  "background": { "service_worker": "fondo.js" },
+  "action": {
+    "default_title": "Avizor",
+    "default_popup": "popup.html",
+    "default_icon": { "16": "iconos/16.png", "32": "iconos/32.png", "48": "iconos/48.png" }
+  },
+  "icons": { "16": "iconos/16.png", "32": "iconos/32.png", "48": "iconos/48.png", "128": "iconos/128.png" }
+}
