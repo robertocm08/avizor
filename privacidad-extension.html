@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacidad · Extensión Avizor</title>
+  <link rel="icon" href="icono-192.png">
+  <link rel="stylesheet" href="styles.css?v=9">
+  <style>
+    .legal { max-width: 720px; margin: 0 auto; padding: 40px 24px 64px; }
+    .legal h1 { font-size: clamp(2rem, 6vw, 2.8rem); }
+    .legal h2 { font-family: var(--serif); margin-top: 32px; }
+    .legal li { margin: 6px 0; }
+  </style>
+</head>
+<body>
+  <main class="legal">
+    <p class="antetitulo">Avizor · Detector de timos</p>
+    <h1>Política de privacidad de la extensión de Chrome</h1>
+    <p>Última actualización: 13 de noviembre de 2026.</p>
+
+    <h2>Resumen</h2>
+    <p><strong>La extensión Avizor no recoge, no envía y no vende ningún dato.</strong> Todo el análisis
+      se hace dentro de tu propio ordenador.</p>
+
+    <h2>Qué hace con la información</h2>
+    <ul>
+      <li><strong>Direcciones de las webs que visitas:</strong> antes de que cargue cada web, la extensión
+        analiza su dirección (por ejemplo, <code>dgt-multas.xyz</code>) para saber si imita a una marca u
+        organismo. El análisis ocurre en tu ordenador, en el momento, y la dirección
+        <strong>no se guarda ni se envía a ningún sitio</strong>. No lee el contenido de las webs.</li>
+      <li><strong>Enlaces que decides comprobar</strong> con el clic derecho: se analizan igual, en tu
+        ordenador, sin abrirlos ni enviarlos.</li>
+      <li><strong>Mensajes que pegas</strong> en el botón de Avizor: se analizan en tu ordenador y se
+        descartan al cerrar la ventana.</li>
+      <li><strong>Webs permitidas:</strong> si pulsas «Continuar igualmente», se guarda el nombre de esa web
+        en tu ordenador (almacenamiento local de Chrome) para no volver a avisarte. Puedes borrarlas desde el
+        botón de Avizor. No se sincroniza ni se envía.</li>
+    </ul>
+
+    <h2>Lo que la extensión no hace</h2>
+    <ul>
+      <li>No se conecta a ningún servidor: ni nuestro ni de terceros.</li>
+      <li>No usa estadísticas, cookies, publicidad ni rastreadores.</li>
+      <li>No guarda tu historial de navegación.</li>
+      <li>No lee ni modifica el contenido de las webs que visitas.</li>
+    </ul>
+
+    <h2>Permisos que pide y por qué</h2>
+    <ul>
+      <li><code>webNavigation</code>: conocer la dirección de una web antes de que cargue, para avisarte si es falsa.</li>
+      <li><code>contextMenus</code>: añadir «Comprobar este enlace con Avizor» al clic derecho.</li>
+      <li><code>storage</code>: recordar en tu ordenador las webs en las que elegiste «Continuar igualmente».</li>
+      <li><code>activeTab</code>: comprobar la web en la que estás, solo cuando pulsas el botón de Avizor.</li>
+    </ul>
+
+    <h2>Contacto</h2>
+    <p>Para cualquier duda, abre una incidencia en
+      <a href="https://github.com/robertocm08/avizor/issues">github.com/robertocm08/avizor</a>.</p>
+    <p><a href="./">Volver a Avizor</a></p>
+  </main>
+</body>
+</html>
