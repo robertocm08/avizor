@@ -142,6 +142,7 @@ function mostrarResultado(resultado, texto) {
 
 function nuevoMensaje() {
   $("mensaje").value = "";
+  actualizarHayTexto();
   $("resultado").hidden = true;
   $("estado-ocr").hidden = true;
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -154,6 +155,7 @@ function nuevoMensaje() {
  */
 function analizar(origen = "escrito") {
   const texto = $("mensaje").value.trim();
+  actualizarHayTexto();
   if (!texto) {
     $("mensaje").focus();
     return;
@@ -172,6 +174,11 @@ function analizar(origen = "escrito") {
 $("analizar").addEventListener("click", () => analizar("escrito"));
 $("limpiar").addEventListener("click", nuevoMensaje);
 $("otro").addEventListener("click", nuevoMensaje);
+// Con texto en el cuadro, "Comprobar mensaje" pasa a ser el botón destacado (móvil)
+function actualizarHayTexto() {
+  $("zona-imagen").classList.toggle("hay-texto", $("mensaje").value.trim().length > 0);
+}
+$("mensaje").addEventListener("input", actualizarHayTexto);
 // Ctrl + Enter también analiza
 $("mensaje").addEventListener("keydown", e => {
   if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) analizar("escrito");
