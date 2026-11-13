@@ -739,8 +739,8 @@ mark {
 .pie strong { color: var(--tinta); }
 .pie a {
   display: inline-block;
-  padding: 8px 4px;          /* zona táctil más grande sin cambiar el texto */
-  margin: -8px 0;
+  padding: 10px 6px;         /* zona táctil de 44 px sin cambiar el texto */
+  margin: -10px -2px;
   font-weight: 700;
   color: var(--rojo);
   text-underline-offset: 3px;
@@ -768,6 +768,15 @@ mark {
   /* Si se puede pegar con un toque, "Comprobar" pasa a ser secundario */
   .btn-pegar:not([hidden]) ~ .acciones .btn-principal {
     background: transparent; color: var(--tinta); box-shadow: inset 0 0 0 1.5px var(--tinta);
+  }
+  /* ...pero si ya hay texto en el cuadro, lo siguiente es comprobarlo:
+     "Comprobar mensaje" vuelve a ser el botón destacado */
+  .compositor.hay-texto .btn-pegar {
+    min-height: 46px; background: transparent; color: var(--tinta);
+    box-shadow: inset 0 0 0 1.5px var(--linea-fuerte); font-size: var(--t-base);
+  }
+  .compositor.hay-texto .btn-pegar:not([hidden]) ~ .acciones .btn-principal {
+    background: var(--tinta); color: var(--papel); box-shadow: none;
   }
   .resultado { padding: 24px 18px; margin-top: 36px; }
   .veredicto { gap: 18px; align-items: flex-start; }

@@ -174,11 +174,12 @@ const REGLAS = [
   },
   {
     id: "pide_codigo", peso: 50,
+    // Códigos que no dan acceso a ninguna cuenta ("el código del wifi", "el código postal")
+    excluir: /\bcodigo (del |de la )?(wifi|postal|de descuento|promocional|de la puerta|del portal|de la alarma|del garaje|de la taquilla)\b/,
     titulo: "Te pide que le pases un código",
     explicacion: "Si alguien te pide el código que te ha llegado por SMS, quiere robarte la cuenta (WhatsApp, banco…). Nunca lo compartas.",
     patrones: [
-      /\bcodigo\b.{0,60}\b(reenvi|pasa|pasame|pasas|pasamelo|dime|digaselo|digamelo|diganos|facilit|mandamelo|enviamelo|envienos)\w*/,
-      /\b(necesito|dame|dime|dices|decir|decirme|dinos|diganos|digame|pasame|pasas|pasamelo|facilit\w*|mandame|enviame|envienos|reenvi\w*|responda con|responde con|dicte|dictenos|lea|leanos)\b.{0,40}\bcodigo\b/,
+      /\bcodigo\b.{0,60}\b(reenvi|pasa|pasame|pasas|pasamelo|dime|digaselo|digamelo|diganos|facilit|mandamelo|enviamelo|envienos|decir|decirmelo|decirnoslo|leer|leermelo|leernoslo|dictar|dictarmelo)\w*/,      /\b(necesito|dame|dime|dices|decir|decirme|dinos|diganos|digame|pasame|pasas|pasamelo|facilit\w*|mandame|enviame|envienos|reenvi\w*|responda con|responde con|dicte|dictenos|lea|leanos)\b.{0,40}\bcodigo\b/,
       /\bte ha llegado (un|el) (sms con un )?codigo\b/, /\b(mensaje|sms) con [0-9]+ (numeros|digitos|cifras)\b/,
     ],
   },
@@ -255,7 +256,7 @@ const REGLAS = [
     explicacion: "Las falsas ofertas de empleo e inversión buscan tu dinero o tus datos.",
     patrones: [
       /\btrabaj\w* desde casa\b/, /\bsin experiencia\b/, /\btiempo parcial\b/, /\bagencia de (empleo|reclutamiento)\b/,
-      /\b(bitcoin|criptomoneda\w*|cripto\w*|trading)\b/, /\binviert\w*\b/, /\btrabajo (flexible|remoto)\b/, /\boferta de (empleo|trabajo)\b/,
+      /\b(bitcoin|criptomoneda\w*|criptos?|criptoactivos?|trading)\b/, /\binviert\w*\b/, /\btrabajo (flexible|remoto)\b/, /\boferta de (empleo|trabajo)\b/,
     ],
   },
   {
@@ -291,7 +292,7 @@ const REGLAS = [
     id: "llamar", peso: 15,
     titulo: "Te pide que llames a un número",
     explicacion: "Es el «vishing»: te hacen llamar a un número falso. Llama solo al teléfono que aparece en tu tarjeta o en la web oficial.",
-    patrones: [/\b(llame|llama|llamenos|llamanos|contacte|marque)\b[^0-9]{0,40}(\+?34 ?)?[6789][0-9]{2}[ .]?[0-9]{2,3}[ .]?[0-9]{2,3}/],
+    patrones: [/\b(llame|llama|llamame|llameme|llamenos|llamanos|contacte|marque)\b[^0-9]{0,40}(\+?34 ?)?[6789][0-9]{2}[ .]?[0-9]{2,3}[ .]?[0-9]{2,3}/],
   },
   {
     id: "responder", peso: 15,
@@ -737,7 +738,7 @@ function analizarMensaje(textoOriginal, { usarModelo = true } = {}) {
   }
   // El propio número delata: bancos y empresas no usan móviles particulares
   // ni números de tarificación especial (803, 806, 807, 905).
-  const telefonoPedido = texto.match(/\b(llame|llama|llamenos|llamanos|contacte|marque)\b[^0-9]{0,40}(\+?34 ?)?([0-9][0-9 .]{7,12})/);
+  const telefonoPedido = texto.match(/\b(llame|llama|llamame|llameme|llamenos|llamanos|contacte|marque)\b[^0-9]{0,40}(\+?34 ?)?([0-9][0-9 .]{7,12})/);
   if (telefonoPedido) {
     const num = telefonoPedido[3].replace(/[ .]/g, "");
     if (/^[67]/.test(num)) {
@@ -780,7 +781,7 @@ function analizarMensaje(textoOriginal, { usarModelo = true } = {}) {
       motivos.push({
         peso: extra, tipo: extra >= 30 ? "grave" : "",
         titulo: "Se parece a estafas que conocemos",
-        explicacion: `Nuestro modelo, entrenado con ${MODELO.casos} mensajes de ejemplo, calcula un ${Math.round(probabilidad * 100)} % de parecido con una estafa.`,
+        explicacion: `Nuestro modelo, entrenado con ${MODELO.casos} mensajes de ejemplo, calcula un ${Math.min(99, Math.round(probabilidad * 100))} % de parecido con una estafa.`,
         evidencia: claves.length ? "Lo que más pesa: " + claves.join(", ") : "",
       });
     }
