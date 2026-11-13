@@ -69,6 +69,7 @@ const PALABRAS_TRAMITE = [
   "ayudas", "sorteo", "premio", "regalo", "puntos", "factura", "cuenta", "apelacion", "copyright", "billing",
   "reparto", "aduana", "sancion", "notificacion", "dispositivo", "firma", "canje", "documento", "compartidos",
   "recurso", "reintento", "monedero", "coordenadas", "inmovilizacion", "tarifa", "renovar",
+  "seguro", "expediente", "denuncia", "citacion", "validar", "verifica", "bloqueo", "reactivar",
 ];
 
 // Acortadores: esconden la dirección real del enlace.
@@ -533,7 +534,7 @@ function analizarEnlace(enlace) {
   const etiquetas = host.split(".");
   const tld = etiquetas[etiquetas.length - 1];
   const evidencia = recortar(original);
-  const add = (peso, titulo, explicacion, tipo) => motivos.push({ peso, titulo, explicacion, evidencia, tipo });
+  const add = (peso, titulo, explicacion, tipo, id) => motivos.push({ peso, titulo, explicacion, evidencia, tipo, id });
 
   const oficial = entidadOficial(host);
   if (oficial) {
@@ -543,7 +544,7 @@ function analizarEnlace(enlace) {
   }
 
   if (/^\d{1,3}(\.\d{1,3}){3}$/.test(host)) {
-    add(35, "El enlace es una dirección IP", "Las webs legítimas usan un nombre (como correos.es), no números.", "grave");
+    add(35, "El enlace es una dirección IP", "Las webs legítimas usan un nombre (como correos.es), no números.", "grave", "ip");
     if (conProtocolo && url.protocol === "http:") add(10, "Enlace sin cifrar (http)", "Las webs oficiales usan https.");
     return motivos;   // en una IP no tiene sentido mirar subdominios ni marcas
   }
@@ -554,7 +555,7 @@ function analizarEnlace(enlace) {
     add(25, "Web alojada en un servicio gratuito", "Cualquiera puede crear ahí una página falsa en minutos.", "grave");
   }
   if (host.includes("xn--")) {
-    add(35, "Dominio con letras camufladas", "Usa caracteres especiales que imitan letras normales para parecer una web conocida.", "grave");
+    add(35, "Dominio con letras camufladas", "Usa caracteres especiales que imitan letras normales para parecer una web conocida.", "grave", "camuflado");
   }
   if (TLD_SOSPECHOSOS.includes(tld)) {
     add(20, `Terminación de dominio poco fiable (.${tld})`, "Es una terminación barata muy usada en campañas de estafa.");
@@ -567,7 +568,9 @@ function analizarEnlace(enlace) {
     if (clave) {
       const ent = ENTIDADES[marca.entidad];
       add(40, `El enlace imita a ${ent.nombre}`,
-        `El dominio contiene «${clave}» pero no es una web oficial. Es una web falsa que se hace pasar por ella.`, "grave");
+        `El dominio contiene «${clave}» pero no es una web oficial. Es una web falsa que se hace pasar por ella.`, "grave", "imita");
+      motivos[motivos.length - 1].entidad = ent.nombre;
+      motivos[motivos.length - 1].clave = clave;
       break;
     }
   }

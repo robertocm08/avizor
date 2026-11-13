@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cuidado: posible web falsa · Avizor</title>
+  <link rel="icon" href="iconos/32.png">
+  <link rel="stylesheet" href="estilo.css">
+  <style>
+    body { min-height: 100vh; display: grid; place-items: start center; padding: 40px 16px 56px;
+           background: linear-gradient(180deg, var(--rojo-suave) 0, var(--papel) 340px); }
+    .tarjeta { width: 100%; max-width: 640px; background: var(--superficie); border-radius: 22px;
+               border-top: 6px solid var(--rojo); box-shadow: 0 24px 60px -30px rgba(60,20,10,.45);
+               padding: 32px 36px 28px; display: grid; gap: 22px; }
+    .cabecera { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .sello-rojo { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px;
+                  background: var(--rojo-suave); color: var(--rojo); font-weight: 700; font-size: .85rem; }
+    .titular { display: flex; gap: 18px; align-items: flex-start; }
+    .icono-alerta { flex: none; width: 56px; height: 56px; border-radius: 50%; background: var(--rojo);
+                    display: grid; place-items: center; }
+    .icono-alerta svg { width: 30px; height: 30px; stroke: #fff; fill: none; stroke-width: 2.4; stroke-linecap: round; }
+    h1 { font-size: 2rem; color: var(--rojo); }
+    .entradilla { font-size: 1.1rem; margin-top: 6px; }
+    h2 { font-size: 1.15rem; margin-bottom: 10px; }
+    .acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+    .acciones .btn-principal { min-height: 54px; padding: 0 28px; font-size: 1.08rem; }
+    .continuar { border-top: 1px dashed var(--linea); padding-top: 16px; display: grid; gap: 12px; }
+    .continuar[hidden] { display: none; }
+    .continuar p { color: var(--tinta-suave); }
+    .ayuda { background: var(--papel-hundido); padding: 14px 16px; border-radius: 12px; }
+    @media (max-width: 520px) {
+      .tarjeta { padding: 24px 20px; }
+      h1 { font-size: 1.6rem; }
+      .acciones .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="tarjeta" aria-labelledby="titulo">
+    <div class="cabecera">
+      <span class="marca"><img src="iconos/48.png" alt="">Avizor</span>
+      <span class="sello-rojo">Web bloqueada por seguridad</span>
+    </div>
+
+    <div class="titular">
+      <span class="icono-alerta" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M12 7v6"/><path d="M12 17h.01"/></svg>
+      </span>
+      <div>
+        <h1 id="titulo" tabindex="-1">Cuidado: esta web podría ser falsa</h1>
+        <p class="entradilla" id="entradilla">Parece imitar a una empresa o entidad conocida, pero no es su web oficial.</p>
+      </div>
+    </div>
+
+    <div>
+      <p class="antetitulo">Ibas a entrar en</p>
+      <p class="direccion" id="direccion"></p>
+    </div>
+
+    <section aria-labelledby="por-que">
+      <h2 id="por-que">Por qué te avisamos</h2>
+      <ol class="motivos" id="motivos"></ol>
+    </section>
+
+    <div class="acciones">
+      <button type="button" class="btn btn-principal" id="salir">Salir de aquí</button>
+      <button type="button" class="btn-texto" id="mostrar-continuar" aria-expanded="false" aria-controls="continuar">Sé lo que hago, quiero entrar</button>
+    </div>
+
+    <div class="continuar" id="continuar" hidden>
+      <p>Entra solo si estás seguro de que es la web correcta. <strong>No escribas contraseñas, datos de tu tarjeta ni códigos.</strong>
+        Avizor no volverá a avisarte en esta web.</p>
+      <div><button type="button" class="btn btn-secundario" id="continuar-igualmente">Entrar igualmente</button></div>
+    </div>
+
+    <p class="ayuda"><strong>¿Ya has metido tus datos o has pagado?</strong> Llama a tu banco cuanto antes y pide ayuda gratuita
+      en el <a href="tel:017">017</a>, la línea de ciberseguridad de INCIBE.</p>
+  </main>
+  <script src="motor.js"></script>
+  <script src="decision.js"></script>
+  <script src="aviso.js"></script>
+</body>
+</html>

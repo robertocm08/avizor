@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Avizor</title>
+  <link rel="stylesheet" href="estilo.css">
+  <style>
+    body { width: 340px; padding: 18px; display: grid; gap: 16px; }
+    .estado { display: flex; gap: 12px; align-items: center; padding: 14px; border-radius: 14px; background: var(--verde-suave); }
+    .punto { flex: none; width: 14px; height: 14px; border-radius: 50%; background: var(--verde);
+             box-shadow: 0 0 0 5px color-mix(in srgb, var(--verde) 25%, transparent); }
+    .estado strong { display: block; }
+    .estado span { font-size: .92rem; color: var(--tinta-suave); }
+    h2 { font-size: 1rem; font-family: var(--sans); font-weight: 700; margin-bottom: 6px; }
+    ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: .95rem; }
+    .permitidas { font-size: .92rem; color: var(--tinta-suave); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .permitidas[hidden] { display: none; }
+    .btn { width: 100%; }
+  </style>
+</head>
+<body>
+  <span class="marca"><img src="iconos/48.png" alt="">Avizor</span>
+
+  <div class="estado">
+    <span class="punto" aria-hidden="true"></span>
+    <div>
+      <strong>Protección activada</strong>
+      <span id="contador">Te avisaremos si entras en una web falsa.</span>
+    </div>
+  </div>
+
+  <section>
+    <h2>Cómo usarlo</h2>
+    <ul>
+      <li>Si entras en una web que imita a Correos, tu banco o Hacienda, verás un aviso rojo.</li>
+      <li>¿Dudas de un enlace? Haz <strong>clic derecho</strong> sobre él y elige <strong>«Comprobar este enlace con Avizor»</strong>.</li>
+    </ul>
+  </section>
+
+  <p class="permitidas" id="permitidas" hidden>
+    <span id="permitidas-texto"></span>
+    <button type="button" class="btn-texto" id="olvidar">Volver a avisar</button>
+  </p>
+
+  <a class="btn btn-principal" href="https://robertocm08.github.io/avizor/" target="_blank" rel="noopener">Comprobar un SMS o WhatsApp</a>
+  <p class="ayuda">Todo se analiza en tu navegador: Avizor no envía las webs que visitas a ningún sitio.</p>
+
+  <script src="popup.js"></script>
+</body>
+</html>
